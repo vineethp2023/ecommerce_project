@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:153 }}
+    {% else %}
+        Welcome to My Mart Store where you can buy so many items....
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} - MyCart Store
+    {% else %}
+        See our new collections - MyCart store
+    {% endif %}
+{% endblock %}
+{% block content %}
+    {% if category %}
+        <div>
+            <div class="row my_row_class">
+                <div class="mx-auto">
+                    <p class="text-center my_product_title"><a href="{% url 'shopping:allProdCat' %}">Our Product Collections</a></p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="mx-auto">
+        {% if category %}
+            <img class="cat_image" src="{{ category.image.url }}" alt="{{ category.name }}">
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title">{{ category.name }}</h1>
+        <p class="text-lg-center" style="margin:80px;">{{ category.description }}</p>
+    </div>
+        {% else %}
+            <div>
+                <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products">
+            </div>
+            <br>
+            <div>
+                <h1 class="text-center my_title">Our product collections</h1>
+                <p class="text-justify">Welcome to Pickles & Provisions, your one-stop shop for all your grocery, fish, and pickle needs! We offer a wide variety of products, including fresh produce, meats, seafood, dairy, baked goods, snacks, and more. We also have a large selection of pickles, from traditional dill pickles to more exotic varieties like mango pickle and kimchi.</p>
+            </div>
+        {% endif %}
+    <div class="container">
+        <div class="row mx_auto">
+            {% for product in products.object_list %}
+                <div class="my_bottom_margin col-9 col-sm-12 col-md-4 xol-lg-4">
+                    <div class="card text-center">
+                        <div style="width:inherit; height:320px; overflow:hidden;">
+                            <a href="{{ product.get_url }}"><img class="card-img-top my_image" src="{{ product.image.url }}" alt="{{ product.name }}"></a>
+                        </div>
+                        <div class="card-body">
+                            <h4>{{ product.name }}</h4>
+                            <p>{{ product.price }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    <div class="mx_auto">
+        {% if products.paginator.num_pages > 1 %}
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+             <a href="?page={{ pg }}" class="btn btn-light  {% if products.number == pg %} active {% endif %}">{{ pg }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+    </div>
+{% endblock %}
+
